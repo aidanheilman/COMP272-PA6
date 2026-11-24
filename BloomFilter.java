@@ -1,7 +1,7 @@
 
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Aidan Heilman / 002
  *
  *   Note, additional comments provided throughout source code is
  *   for educational purposes.
@@ -218,16 +218,21 @@ class BloomFilter {
      * @return  - false if not in set, else true for most probably in set
      */
 
+    /* Use same logic as add to find hash codes. Instead of setting 
+     * use the get function and check if each is there. If any are
+     * absent, string is definitely not in the set
+     */
     public boolean contains(String s) {
+        for (int n = 0; n < noHashes; n++) {
+            long hc = hashCode(s, n);
+            int bitNo = (int) hc & hashMask;
 
-        // ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME AT TOP OF FILE
-        //
-        // HINT: the bitmap is the private class variable 'data', and it is
-        // of type BitSet (Java class BitSet). See Oracle documentation for
-        // this class on available methods. You can also see how method 'add'
-        // in this class uses the object.
+            if (!data.get(bitNo)) {
+                return false;
+            }
+        }
 
-        return false;
+        return true;
     }
 
 

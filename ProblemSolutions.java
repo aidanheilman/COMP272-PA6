@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Aidan Heilman / 002
  *
  *   This java file contains the problem solutions of isSubSet, findKthLargest,
  *   and sort2Arrays methods. You should utilize the Java Collection Framework for
@@ -8,7 +8,9 @@
  *
  ********************************************************************/
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.PriorityQueue;
 
 class ProblemSolutions {
 
@@ -31,11 +33,24 @@ class ProblemSolutions {
      * @return      - returns boolean value B is a subset of A.
      */
 
-    public boolean isSubset(int list1[], int list2[]) {
+    /* PutIfAbsent returns null if the key is not in the map, value otherwise.
+     * Add list1 to hashmap, add list2 if not in hashmap.
+     * Increment count var when duplicate value in list2. 
+     * If count == length of list2, list2 is a subset of list1.
+     */
+        public boolean isSubset(int list1[], int list2[]) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int count = 0;
 
-        // ADD YOUR CODE HERE -- DON'T FORGET TO ADD YOUR NAME AT TOP OF FILE
-
-        return false;
+        for (int value : list1) {
+            map.put(value, 0); 
+        }
+        for (int value : list2) {
+            if (map.putIfAbsent(value, 0) != null) {
+                count++;
+            }
+        }
+        return (count == list2.length);
     }
 
 
@@ -56,11 +71,15 @@ class ProblemSolutions {
      * @return      - the value in the array which is the kth maximum value
      */
 
+    /* Add array to max heap, remove k times */
     public int findKthLargest(int[] array, int k) {
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Comparator.reverseOrder());
+        int maxk = 0;
 
-        // ADD YOUR CODE HERE
+        for (int value : array) {maxHeap.add(value);}
+        for (int i = 0; i < k; i++) {maxk = maxHeap.remove();}
 
-        return 0;
+        return maxk;
     }
 
 
@@ -80,11 +99,17 @@ class ProblemSolutions {
      * @return          - Sorted array with all elements in A and B.
      */
 
+    /* Add both lists' vals to heap, remove from heap and add to array */
     public int[] sort2Arrays(int[] array1, int[] array2) {
+        int arraysize = array1.length + array2.length;
+        int[] array = new int[arraysize];
+        PriorityQueue<Integer> heap = new PriorityQueue<>();
 
-        // ADD YOUR CODE HERE
+        if (array1.length != 0) {for (int value : array1) {heap.add(value);}}
+        if (array2.length != 0) {for (int value : array2) {heap.add(value);}}
+        for (int i = 0; i < arraysize; i++) {array[i] = heap.remove();}
 
-        return null;
+        return array;
     }
 
 }
