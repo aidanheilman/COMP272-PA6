@@ -247,9 +247,12 @@ public class CuckooHash<K, V> {
      * @param value the value of the element to add
 	 */
 
+	/* Notes: need to change to a current/displaced move/update logic
+	 * Missing a whole other side of the hash logic, like if displaced or current is in pos2
+	 * Unsure how to implement this */
  	public void put(K key, V value) {
 		int pos1 = hash1(key);
-		int pos2 = hash2(key);
+		int pos2 = hash2(key); // not used, but I feel like it definitely should be
 		for (int n = 0; n < CAPACITY; n++) {
 			//three cases to check
 			//position 1 has the KV pair already --> return
@@ -273,6 +276,7 @@ public class CuckooHash<K, V> {
 						table[newhousing] = new Bucket<> (resident, partner);
 						table[pos1].bucKey = key;
 						table[pos1].value = value;
+						key = resident; // update current ? Having a very difficult time conceptualizing implementation here
 					}
 					else {
 						put(resident, partner);
@@ -280,7 +284,8 @@ public class CuckooHash<K, V> {
 				return;
 			}
 		}
-		rehash();
+		rehash(); //rehash after capacity loop finished
+		//retry inserting current here
 	}
 
 
