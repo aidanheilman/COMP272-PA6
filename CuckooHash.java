@@ -1,7 +1,7 @@
 
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Aidan Heilman / 002
  *
  *   Note, additional comments provided throughout this source code
  *   is for educational purposes
@@ -11,6 +11,7 @@
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.lang.Math;
 
@@ -247,12 +248,39 @@ public class CuckooHash<K, V> {
 	 */
 
  	public void put(K key, V value) {
-
-		// ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME AT TOP OF FILE.
-		// Also make sure you read this method's prologue above, it should help
-		// you. Especially the two HINTS in the prologue.
-
-		return;
+		int pos1 = hash1(key);
+		int pos2 = hash2(key);
+		for (int n = 0; n < CAPACITY; n++) {
+			//three cases to check
+			//position 1 has the KV pair already --> return
+			if (table[pos1] != null
+					&& table[pos1].bucKey.equals(key)
+					&& table[pos1].value.equals(value)
+			 	)	{return;}
+			//position 1 is empty --> insert
+			else if (table[pos1] == null) {
+				table[pos1] = new Bucket<>(key, value);
+				return;
+			}
+			//position 1 has a different KV pair --> kick
+			//but... what if the kicked to position has a resident too?
+			else if (table[pos1] != null) {
+				// move current resident to other hash
+				K resident = table[pos1].getBucKey();
+				V partner = table[pos1].getValue();
+				int newhousing = hash2(resident);
+					if (table[newhousing] == null) {
+						table[newhousing] = new Bucket<> (resident, partner);
+						table[pos1].bucKey = key;
+						table[pos1].value = value;
+					}
+					else {
+						put(resident, partner);
+					}
+				return;
+			}
+		}
+		rehash();
 	}
 
 
